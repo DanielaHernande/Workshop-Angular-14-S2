@@ -1,0 +1,47 @@
+<div class="p-4">
+  <h2 class="font-bold text-2xl mb-4">Gestión de Usuarios</h2>
+  <table>
+    <thead>
+      <tr class="font-semibold">
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td class="font-medium">{{ user.id }}</td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <button (click)="deleteUser(user.id)" class="bg-red-700 text-white rounded-md px-2 py-1">Eliminar</button>
+          <button
+            class="ml-2 px-2 py-1 rounded-md bg-blue-700 text-white"
+            (click)="
+              updateUser(user.id, {
+                first_name: 'Nuevo',
+                last_name: 'Nombre',
+                email: user.email
+              })
+            "
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <form
+    (submit)="
+      addUser({
+        first_name: 'Nuevo',
+        last_name: 'Usuario',
+        email: 'nuevo@correo.com'
+      })
+    "
+  >
+    <input type="submit" value="Añadir Usuario" class="bg-blue-500 px-2 py-1 rounded-md mt-4" />
+  </form>
+</div>

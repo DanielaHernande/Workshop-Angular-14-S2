@@ -1,46 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { properties } from 'src/assets/properties/properties';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginResponse } from 'src/assets/model/LoginResponse';
-import { error } from 'console';
+import { properties } from 'src/assets/properties/properties';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   logo = properties.logo;
   formLogin: FormGroup;
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.formLogin = new FormGroup({
-      email: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
+  constructor(private fb: FormBuilder, private router: Router) {
+    this.formLogin = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
     });
   }
 
-  ngOnInit(): void {}
+  onLogin(): void {
+    const email = this.formLogin.get('email')?.value;
+    const password = this.formLogin.get('password')?.value;
 
-  login() {
-    if (this.formLogin.valid) {
-      const loginDta = this.formLogin.value;
-
-      this.http
-        .post<LoginResponse>('https://reqres.in/api/login', loginDta)
-        .subscribe((response) => {
-          localStorage.setItem('authToken', response['token']);
-          console.log("Funciono va para users")
-          this.router.navigate(['users']);
-        },
-        error => {
-          alert('Error de autenticacnion')
-        }
-      );
+    if (email === 'usuario@example.com' && password === '1234') {
+      localStorage.setItem('authToken', 'dummy-token');
+      console.log('paso');
+      this.router.navigate(['/admin']);
     } else {
-      alert('Formulario no invalido')
+      alert('Credenciales incorrectas');
     }
   }
 }
